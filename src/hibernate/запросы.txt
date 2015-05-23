@@ -1,0 +1,118 @@
+ create table Users (login varchar(20),
+ password varchar(20), access tinyint unsigned,
+ sex tinyint unsigned, birthday DATE, city varchar(30),
+ about text, avatar tinyint unsigned,constraint pk_users primary key (login));
+
+create table Messages
+(id bigint unsigned auto_increment, date bigint unsigned, from_id varchar(20), to_id
+ varchar(20), value text, user varchar(20), unread boolean, deleted boolean, constraint pk_messages primary key (id), constraint 
+fk_from_id foreign key (from_id) references users (login),constraint fk_to_id 
+foreign key (to_id) references users (login),constraint fk_messages_user 
+foreign key (user) references users (login));
+
+
+create table advertisement
+(adv_id bigint unsigned auto_increment, date bigint unsigned, topic varchar(50), 
+value text, user varchar(20), city varchar(30) , field tinyint unsigned , type tinyint unsigned , sex tinyint unsigned, 
+age_from tinyint unsigned , age_to tinyint unsigned, constraint pk_messages primary key (adv_id), constraint 
+fk_user foreign key (user) references users (login));
+
+
+create table responses
+(id bigint unsigned auto_increment, date bigint unsigned, user varchar(20), 
+advertisement bigint unsigned, confirmed boolean, constraint pk_responses primary key (id), constraint 
+fk_responses_user foreign key (user) references users (login),constraint 
+fk_responses_advertisement foreign key (advertisement) references advertisement (adv_id));
+
+create table advcomments
+(id bigint unsigned auto_increment, date bigint unsigned, user varchar(20), 
+advertisement bigint unsigned, value text, constraint pk_advcomments primary key (id), constraint 
+fk_advcomments_user foreign key (user) references users (login),constraint 
+fk_advcomments_advertisement foreign key (advertisement) references advertisement (adv_id));
+
+create table photodescriptions
+(id bigint unsigned auto_increment, date bigint unsigned, user varchar(20), 
+ description text deleted boolean,, constraint pk_photodescriptions primary key (id), constraint 
+fk_photodescriptions_user foreign key (user) references users (login));
+
+create table photolikes
+(id bigint unsigned auto_increment, date bigint unsigned,  
+photo_id bigint unsigned, user_from varchar(20) deleted boolean,, constraint pk_photolikes primary key (id), constraint 
+fk_photolikes_photo_id foreign key (photo_id) references photodescriptions (id), constraint 
+fk_photolikes_user_from foreign key (user_from) references users (login));
+
+create table photocomments
+(id bigint unsigned auto_increment, 
+photo_id bigint unsigned, date bigint unsigned, user_from varchar(20), value text, deleted boolean, constraint pk_photocomments primary key (id),  constraint 
+fk_photocomments_photo_id foreign key (photo_id) references photodescriptions (id),constraint 
+fk_photocomments_user_from foreign key (user_from) references users (login));
+
+select * from users;
+select * from messages;
+select * from advertisement;
+select * from advcomments;
+
+insert into users values ('user2','0000',1,1,'1993-12-07','Санкт-Петербург','васька я',1);
+
+insert into messages values (null,103342,'admin1','user1', 'sdfs');
+
+alter table messages modify date bigint unsigned;
+
+select *
+from Messages m
+WHERE (m.from_id = 'user2' AND m.to_id = 'user1')OR(m.from_id = 'user1' AND m.to_id = 'user2')
+order by m.date desc;
+
+select m.id, m.date, m.from_id, m.to_id, m.value
+from (select * from messages order by date desc) m
+WHERE (m.from_id = 'user1')or(m.to_id = 'user1')
+group by m.from_id;
+
+select r.id, r.date,
+ case
+  when r.sender = 0 then
+  (select 'admin2')
+  when r.sender = 1 then
+  (select r.user)
+  end from_id,
+ case
+  when r.sender = 0 then
+  (select r.user)
+  when r.sender = 1 then
+  (select 'admin2')
+  end to_id, r.value, r.user, r.unread, r.deleted
+from (select m.id, m.date,
+  case 
+   when m.from_id = 'admin2' then
+    (select m.to_id )
+   when m.to_id = 'admin2' then
+    (select m.from_id )
+   end other,
+ case 
+   when m.from_id = 'admin2' then
+    (select 0 )
+   when m.to_id = 'admin2' then
+    (select 1 )
+   end sender, m.value, m.user, m.unread, m.deleted
+from (select * from messages order by date desc) m
+WHERE ((m.from_id = 'admin2')or(m.to_id = 'admin2'))and(m.user = 'admin2')and((m.deleted = '0')or(m.deleted = '0' ))
+group by other
+order by date desc) r;
+
+select * 
+from Advertisement a 
+WHERE user = 'user1' 
+order by a.date desc;
+
+SELECT * 
+FROM Advertisement a 
+WHERE (a.date >= '0') and (a.date <= '4000000') 
+and ((a.sex = '1')or(a.sex = '0')) 
+and (a.age_from <= '23') 
+and (a.age_to >= '23') 
+order by a.date desc;
+
+select * 
+from Response r 
+where r.user = :user and r.advertisement = :adv_id
+

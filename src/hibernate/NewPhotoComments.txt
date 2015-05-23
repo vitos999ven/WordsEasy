@@ -1,0 +1,34 @@
+List <User> users = Factory.getInstance().getUserDAO().getAllUsers();
+      Random rn = new Random();
+      int[] pop = new int[users.size()];
+      for (int i = 0; i < users.size(); i++){
+          pop[i] = (int)Math.exp(((i % 3 + 1) * (i % 5 + 1) * (rn.nextInt(2) + 1)) % 2) + (i % 3 + 1) *(i % 2 + 1) * (rn.nextInt(2));
+      }
+      
+      List <PhotoDescription> descs = Factory.getInstance().getPhotoDescriptionDAO().getAllPhotoDescriptions();
+      for (PhotoDescription i : descs){
+          String user = Factory.getInstance().getUserDAO().getUserByLogin(i.getUser()).getLogin();
+          int id = 0;
+          for (int j = 0; j < users.size(); j++){
+              if (users.get(j).getLogin().equals(user)) id = j;
+          }
+          long likes = (((i.getId() % 3 + 1)  * (i.getId() % 5 + 1) * rn.nextInt(3)) % 4) *  (pop[id] + rn.nextInt(2)) + rn.nextInt(2)*rn.nextInt(3);
+          System.out.print("pop: " + pop[id] + ", likes: " + likes + ", users: ");
+          Set <String> logins = new TreeSet<>(); 
+          while (logins.size() < likes){
+              int name = rn.nextInt(users.size() - 1);
+              if (!users.get(name).getLogin().equals("Loader")) logins.add(users.get(name).getLogin());
+          }
+          Iterator<String> iterator = logins.iterator();
+          while(iterator.hasNext()){
+              String next = iterator.next();
+             PhotoLike m = new PhotoLike(
+                null,//id
+                i.getId(),//photo_id
+                next);//user_from
+       Factory.getInstance().getPhotoLikeDAO().addPhotoLike(m); 
+            System.out.print(next + " ");
+          }
+          System.out.println();
+      }
+      getAllPhotoLikes();

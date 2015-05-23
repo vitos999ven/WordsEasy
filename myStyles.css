@@ -1,0 +1,89 @@
+body{
+    margin: 0;
+    overflow : hidden;
+}
+.container{
+    background: #222222;
+    z-index: 100;
+    
+}
+.glyphicon {
+    cursor: pointer;
+    color: #dddddd;
+    z-index: 200;
+}
+#mainContainer{
+    height: 100%;
+    width: 100%;
+    background: #333333;
+}
+.menu{
+    background: #111111;
+    z-index: 800;
+   // border: 1px solid #000000;
+}
+.menuButton{
+    color: #eeeeee;
+    font-family: sans-serif;
+    cursor: pointer;
+}
+#cookieUserFrame{
+    position: absolute;
+    border: 1px solid #111111;
+    background: #777777;
+    color: #cccccc; 
+    font-size: 1.3em;
+    z-index: 900;
+}
+.photoGlyphFrame{
+    background: #555555;
+    cursor: pointer;
+}
+.photoGlyphFrame:hover{
+    background: #606060;
+}
+.photoGlyphFrame:active{
+    background: #505050;
+}
+.scrollObject{
+    z-index: 1100;
+    background: #111111;
+    cursor: pointer;
+}
+.scrollObjectSlider{
+    position: relative;
+    background: #aaaaaa;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.4); 
+    border-radius: 5px;
+}
+.userFrame{
+    background: #777777;
+    z-index: 110;
+    color: #cccccc;
+}
+.userNameDiv{
+    position: absolute;
+    text-align: center;
+    top: 85%;
+    left: 0;
+    width: 100%;
+    cursor: pointer;
+}
+.userOnlineStatusDiv{
+    position: absolute;
+    text-align: right;
+    top: 0;
+    left: 0;
+    width: 95%;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+.waitingAnimation{
+    background: #101010;
+    z-index: 1000;
+}
+.waitingAnimationBall{
+    background: #808080;
+    border-radius: 10px;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.4); 
+}
